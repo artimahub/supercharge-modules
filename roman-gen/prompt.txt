@@ -1,0 +1,48 @@
+Build a Scala 3 sbt project in the current directory. Work entirely
+inside this directory; do not create files anywhere else.
+
+Layout
+------
+  build.sbt                     scalaVersion 3.3.x, project name "roman"
+  project/build.properties      sbt.version 1.10.x
+  src/main/scala/Roman.scala    the implementation
+  src/test/scala/RomanSpec.scala MUnit tests
+
+The object
+----------
+object Roman must expose exactly these two public functions:
+
+  def toRoman(n: Int): String
+    Returns the canonical Roman numeral for n.
+    Throws IllegalArgumentException when n <= 0.
+
+  def fromRoman(s: String): Option[Int]
+    Returns Some(value) for a canonical Roman numeral, None otherwise.
+    Input is trimmed and case-insensitive; output is always Some(total) only
+    when the input is in canonical form.
+
+Rules the implementation must satisfy
+-------------------------------------
+1. Standard subtractive notation: IV, IX, XL, XC, CD, CM. Never IIII or VIIII.
+2. Symbols V, L and D never repeat. I, X, C and M repeat at most three times.
+3. fromRoman must reject non-canonical input: "IIII", "VX", "IC", "LL", "ABC",
+   "" and null-like garbage all return None.
+4. Prefer validating fromRoman by round-tripping: parse the value, then check
+   toRoman(parsed) == the normalized input. Hand-rolled character scans are a
+   common source of bugs here.
+5. toRoman must be correct for the whole 1..3999 range, including values that
+   need a repeated symbol (200 -> CC, 3000 -> MMM, 3999 -> MMMCMXCIX).
+   Beware: a single foldLeft pass over the denomination table visits each
+   denomination only once and silently drops repeats.
+
+Testing
+-------
+Add MUnit tests (libraryDependencies += "org.scalameta" %% "munit" % "1.0.0"
+% Test in build.sbt) covering at least:
+  - toRoman for a table of values: 1, 4, 9, 14, 40, 90, 400, 1994, 3999
+  - fromRoman round-trips for every value in 1 to 3999
+  - fromRoman returns None for "IIII", "VX", "IC", "LL", "ABC" and ""
+  - lowercase input such as "mcmxciv" is accepted and equals 1994
+
+Then run `sbt test`, paste the real output, and keep fixing the code until the
+test run is green. Do not report success without an actual passing run.

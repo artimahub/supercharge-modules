@@ -1,0 +1,44 @@
+Fill in the Scaladoc placeholders in {{FILE}}. Work entirely inside this
+directory; do not touch any other file.
+
+What a placeholder looks like
+-----------------------------
+The `todo-writer` tool marks every undocumented declaration in place. A
+marker block sits immediately above the declaration it belongs to:
+
+  /** TODO FILL IN
+   *
+   *  @param handleItem TODO FILL IN
+   */
+  def generate(handleItem: A => Generator.Action): Generator.Action
+
+What to do
+----------
+1. For each `TODO FILL IN` in the file, read the declaration below it and the
+   code around it. Documentation must describe what *this* code actually
+   does, not what the name suggests it might do.
+2. Replace the summary `TODO FILL IN` with one or two sentences, in
+   Markdown, describing the behaviour. Wrap the summary in `[[...]]` when it
+   refers to another type or member in this codebase.
+3. Replace every `TODO FILL IN` inside a tag with real content:
+   - `@param x` what the caller is expected to pass, and what happens when
+     they pass something unusable.
+   - `@tparam T` what the type parameter means and how it constrains the
+     declaration.
+   - `@return` the result, and what an `Option`/`Either`/throw means here.
+4. Keep the tags that are already present and only add tags that the
+   declaration genuinely needs. Do not delete a tag to avoid writing it.
+5. Fill every marker. A file is done when `grep -c 'TODO FILL IN'` is 0.
+
+What not to do
+--------------
+- Do not change any executable code: no signature changes, no imports, no
+  formatting outside the comment blocks.
+- Do not leave `TODO FILL IN`, `???`, "returns the thing", or any other
+  placeholder text behind. Real prose, every time.
+- Do not delete a declaration because its documentation is inconvenient.
+- Do not add section headers, banners or top-of-file comments; only fill in
+  the existing markers.
+
+When finished, print a one-line summary of the file:
+`<file>: <n> markers filled`.
